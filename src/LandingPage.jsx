@@ -17,7 +17,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="flex flex-col lg:flex-row justify-between items-center px-20 py-40 max-w-7xl mx-auto">
+      <section  id = "home" className="flex flex-col lg:flex-row justify-between items-center px-20 py-40 max-w-7xl mx-auto">
         <div className="max-w-md mb-10 lg:mb-0">
           <h1 className="text-4xl font-bold mb-4">Find your personalized path to your dream job</h1>
           <p className="text-sm mb-6 text-gray-600">Pathway calculates the steps you need to progress in your career, identifying the roles and skills required to reach your goals</p>
@@ -31,7 +31,7 @@ export default function LandingPage() {
       </section>
 
       {/* About Section */}
-      <section className="px-8 py-16 max-w-4xl mx-auto">
+      <section id = 'About' className="px-8 py-16 max-w-4xl mx-auto">
         <h2 className="text-3xl text-center underline font-bold mb-10">About us</h2>
         <div className="flex flex-col md:flex-row gap-6">
           <img src="/path-about.png" alt="Pathway" className="w-40 h-40 object-contain" />
@@ -50,7 +50,7 @@ export default function LandingPage() {
       </section>
 
       {/* Contact Section */}
-      <section className="px-8 py-16 max-w-2xl mx-auto">
+      <section id = "Contact" className="px-8 py-16 max-w-2xl mx-auto">
         <h2 className="text-3xl text-center underline font-bold mb-10">Contact Us</h2>
         <form className="space-y-6">
           <div>

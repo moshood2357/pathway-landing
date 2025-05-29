@@ -1,21 +1,48 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 export default function PasswordResetOTP() {
   const navigate = useNavigate();
-  const [otp, setOtp] = useState('');
+  const location = useLocation();
+  const email = location.state?.email || ''; // Email passed from previous step
 
-  const handleSubmit = (e) => {
+  const [otp, setOtp] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!otp) {
-      alert('Please enter the OTP');
+      setError('Please enter the OTP');
       return;
     }
 
-    // Optionally: Validate OTP here or send to server
+    setLoading(true);
+    setError('');
 
-    // Navigate to dashboard (or wherever next)
-    navigate('/dashboard');
+    try {
+      const response = await fetch('https://your-api-url.com/api/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, otp })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Invalid OTP');
+      }
+
+      // OTP is valid, navigate to dashboard
+      navigate('/reset-password');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,6 +52,8 @@ export default function PasswordResetOTP() {
         <p className="text-gray-600 mb-8">Enter the OTP sent to your email</p>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
           <input
             type="text"
             value={otp}
@@ -35,9 +64,10 @@ export default function PasswordResetOTP() {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-lg font-medium transition-colors"
           >
-            Submit
+            {loading ? "Verifying..." : "Submit"}
           </button>
         </form>
       </div>
