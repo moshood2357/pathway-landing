@@ -21,12 +21,12 @@ const navigationItems = [
   { icon: Settings, label: "Settings" },
 ];
 
-const skillsData = [
-  { name: "Python", progress: 75 },
-  { name: "Data analysis", progress: 85 },
-  { name: "Statistics", progress: 65 },
-  { name: "SQL", progress: 80 },
-  { name: "Machine L.", progress: 45 },
+const defaultSkillsData = [
+  { name: "Python", progress: 0 },
+  { name: "Data analysis", progress: 0 },
+  { name: "Statistics", progress: 0 },
+  { name: "SQL", progress: 0 },
+  { name: "Machine L.", progress: 0 },
 ];
 
 const courses = [
@@ -50,6 +50,8 @@ export default function Dashboard() {
     "Communication",
     "Problem Solving",
   ]);
+  const [skillsData] = useState(defaultSkillsData);
+  const [readiness] = useState(0); // readiness is static for now
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,22 +75,14 @@ export default function Dashboard() {
 
   return (
     <div className="flex">
-      <div
-        className={`transition-all duration-300 ${collapsed ? "w-20" : "w-64"} bg-slate-900 text-white min-h-screen p-4`}
-      >
+      <div className={`transition-all duration-300 ${collapsed ? "w-20" : "w-64"} bg-slate-900 text-white min-h-screen p-4`}>
         <div className="flex justify-between items-center mb-8">
           {!collapsed && (
-            <Link
-              to="/"
-              className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center"
-            >
+            <Link to="/" className="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center">
               <img src="/logo.png" alt="Logo" className="w-8 h-8" />
             </Link>
           )}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="text-white focus:outline-none"
-          >
+          <button onClick={() => setCollapsed(!collapsed)} className="text-white focus:outline-none">
             <Menu className="w-6 h-6" />
           </button>
         </div>
@@ -96,27 +90,16 @@ export default function Dashboard() {
         <nav className="space-y-2">
           {navigationItems.map((item) => {
             const navItem = (
-              <div
-                key={item.label}
-                className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                  item.active
-                    ? "bg-amber-500 text-slate-900"
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                }`}
-              >
-                <item.icon
-                  className={`transition-all ${collapsed ? "w-6 h-6" : "w-5 h-5"}`}
-                />
-                {!collapsed && (
-                  <span className="text-sm font-medium">{item.label}</span>
-                )}
+              <div key={item.label} className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                item.active ? "bg-amber-500 text-slate-900" : "text-slate-300 hover:bg-slate-800 hover:text-white"
+              }`}>
+                <item.icon className={`transition-all ${collapsed ? "w-6 h-6" : "w-5 h-5"}`} />
+                {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
               </div>
             );
 
             return collapsed && item.label !== "Dashboard" ? (
-              <div key={item.label} title={item.label}>
-                {navItem}
-              </div>
+              <div key={item.label} title={item.label}>{navItem}</div>
             ) : (
               navItem
             );
@@ -139,13 +122,10 @@ export default function Dashboard() {
               <div className="bg-white rounded-xl p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm text-gray-500">Career goal</span>
-                  <Edit2
-                    className="w-4 h-4 text-gray-400 cursor-pointer"
-                    onClick={() => {
-                      setIsEditing(true);
-                      setEditedGoal(careerGoal);
-                    }}
-                  />
+                  <Edit2 className="w-4 h-4 text-gray-400 cursor-pointer" onClick={() => {
+                    setIsEditing(true);
+                    setEditedGoal(careerGoal);
+                  }} />
                 </div>
                 {isEditing ? (
                   <div className="flex gap-2 items-center">
@@ -155,13 +135,10 @@ export default function Dashboard() {
                       onChange={(e) => setEditedGoal(e.target.value)}
                       className="border border-gray-300 rounded px-2 py-1 text-sm flex-1"
                     />
-                    <button
-                      onClick={() => {
-                        setCareerGoal(editedGoal);
-                        setIsEditing(false);
-                      }}
-                      className="text-sm bg-green-600 text-white px-3 py-1 rounded"
-                    >
+                    <button onClick={() => {
+                      setCareerGoal(editedGoal);
+                      setIsEditing(false);
+                    }} className="text-sm bg-green-600 text-white px-3 py-1 rounded">
                       Save
                     </button>
                   </div>
@@ -176,14 +153,9 @@ export default function Dashboard() {
               <div className="space-y-4">
                 {skillsData.map((skill) => (
                   <div key={skill.name} className="flex items-center gap-4">
-                    <div className="w-20 text-sm font-medium text-gray-700">
-                      {skill.name}
-                    </div>
+                    <div className="w-20 text-sm font-medium text-gray-700">{skill.name}</div>
                     <div className="flex-1 bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-slate-800 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${skill.progress}%` }}
-                      />
+                      <div className="bg-slate-800 h-2 rounded-full transition-all duration-300" style={{ width: `${skill.progress}%` }} />
                     </div>
                   </div>
                 ))}
@@ -194,15 +166,10 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold text-gray-700 mb-4">Recommended Courses</h2>
               <div className="space-y-4">
                 {courses.map((course) => (
-                  <div
-                    key={course.title}
-                    className="bg-white rounded-xl p-4 border border-gray-200 flex items-center gap-4"
-                  >
+                  <div key={course.title} className="bg-white rounded-xl p-4 border border-gray-200 flex items-center gap-4">
                     <div className="w-24 h-16 bg-gray-200 rounded-lg"></div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800">
-                        {course.title}
-                      </h3>
+                      <h3 className="font-semibold text-gray-800">{course.title}</h3>
                     </div>
                     <button className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                       Start
@@ -217,9 +184,9 @@ export default function Dashboard() {
               <p className="text-gray-500 mb-4">Preparedness for the next role</p>
               <div className="flex items-center gap-4">
                 <div className="flex-1 bg-gray-200 rounded-full h-3">
-                  <div className="bg-green-600 h-3 rounded-full w-2/3"></div>
+                  <div className="bg-green-600 h-3 rounded-full" style={{ width: `${readiness}%` }}></div>
                 </div>
-                <span className="text-2xl font-bold text-gray-800">65%</span>
+                <span className="text-2xl font-bold text-gray-800">{readiness}%</span>
               </div>
             </div>
           </div>
@@ -232,36 +199,22 @@ export default function Dashboard() {
                   <li key={skill} className="text-sm text-gray-600 flex items-start gap-2">
                     <span className="text-gray-400 mt-1">•</span>
                     {skill}
-                    <button
-                      onClick={() => removeSkill(skill)}
-                      className="text-red-500 text-xs ml-2"
-                    >
+                    <button onClick={() => removeSkill(skill)} className="text-red-500 text-xs ml-2">
                       Remove
                     </button>
                   </li>
                 ))}
               </ul>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const newSkill = e.target.elements.skill.value.trim();
-                  if (newSkill) {
-                    addSkill(newSkill);
-                    e.target.reset();
-                  }
-                }}
-                className="flex gap-2"
-              >
-                <input
-                  type="text"
-                  name="skill"
-                  placeholder="Add a new skill"
-                  className="border px-2 py-1 text-sm flex-1 rounded"
-                />
-                <button
-                  type="submit"
-                  className="bg-amber-500 text-white text-sm px-4 py-1 rounded"
-                >
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const newSkill = e.target.elements.skill.value.trim();
+                if (newSkill) {
+                  addSkill(newSkill);
+                  e.target.reset();
+                }
+              }} className="flex gap-2">
+                <input type="text" name="skill" placeholder="Add a new skill" className="border px-2 py-1 text-sm flex-1 rounded" />
+                <button type="submit" className="bg-amber-500 text-white text-sm px-4 py-1 rounded">
                   Add
                 </button>
               </form>
